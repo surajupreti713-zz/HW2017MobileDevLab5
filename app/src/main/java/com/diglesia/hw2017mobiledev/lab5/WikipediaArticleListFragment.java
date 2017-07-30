@@ -9,7 +9,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
+
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +25,10 @@ public class WikipediaArticleListFragment extends Fragment {
     private ListView mListView;
     private ArticleAdapter mArticleAdapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
+
+    private TextView mTitleView;
+    private TextView mBodyTextView;
+    private NetworkImageView mImageView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -41,6 +52,7 @@ public class WikipediaArticleListFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Article article = (Article) parent.getAdapter().getItem(position);
                 // Add your click handling code here.
+
             }
         });
 
@@ -105,6 +117,17 @@ public class WikipediaArticleListFragment extends Fragment {
             // article's contents on them.
             // 2) Get a reference to the NetworkImageView, and use the ImageLoader vended by
             // WikipediaArticleSource to set the image.
+
+            mTitleView = (TextView) rowView.findViewById(R.id.titleView);
+            mTitleView.setText(article.getTitle());
+
+            mBodyTextView = (TextView) rowView.findViewById(R.id.contentView);
+            mBodyTextView.setText(article.getBodyExtract());
+
+            mImageView = (NetworkImageView) rowView.findViewById(R.id.networkImageView);
+            ImageLoader loader = WikipediaArticleSource.get(getContext()).getImageLoader();
+            mImageView.setImageUrl(article.getImageURLString(), loader);
+
 
             return rowView;
         }
