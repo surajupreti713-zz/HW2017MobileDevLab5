@@ -1,6 +1,8 @@
 package com.diglesia.hw2017mobiledev.lab5;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -52,6 +54,10 @@ public class WikipediaArticleListFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Article article = (Article) parent.getAdapter().getItem(position);
                 // Add your click handling code here.
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(article.getURLString()));
+                startActivity(i);
+
 
             }
         });
