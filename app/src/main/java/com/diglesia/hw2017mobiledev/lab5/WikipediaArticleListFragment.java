@@ -32,6 +32,15 @@ public class WikipediaArticleListFragment extends Fragment {
     private TextView mBodyTextView;
     private NetworkImageView mImageView;
 
+    private List<Article> mArticles;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+    }
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_wikipediaarticlelist, container, false);
@@ -62,9 +71,14 @@ public class WikipediaArticleListFragment extends Fragment {
             }
         });
 
-        // Load on start. Manually show the spinner.
-        mSwipeRefreshLayout.setRefreshing(true);
-	    refreshArticles();
+        // If there is content to display, show it, otherwise refresh content.
+        if (mArticles != null) {
+            mArticleAdapter.setItems(mArticles);
+        }
+        else {
+            mSwipeRefreshLayout.setRefreshing(true);
+            refreshArticles();
+        }
 
 	    return v;
     }
@@ -73,6 +87,7 @@ public class WikipediaArticleListFragment extends Fragment {
         WikipediaArticleSource.get(getContext()).getArticles(new WikipediaArticleSource.ArticleListener() {
             @Override
             public void onArticleResponse(List<Article> articleList) {
+                mArticles = articleList;
                 // Stop the spinner and update the list view.
                 mSwipeRefreshLayout.setRefreshing(false);
                 mArticleAdapter.setItems(articleList);
